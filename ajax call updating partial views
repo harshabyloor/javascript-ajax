@@ -1,0 +1,40 @@
+function ShowPlanDetails(baseUri, custSubsId) {
+    var value = $("#cmdPlans option:selected").val();
+
+    var customerSubs = { CustomerSubscriptionID: custSubsId, //should be same as object(viewmodel)
+        SubscriptionPlanID: value
+    };
+
+    if (value > 0) {
+        $.ajax({
+            type: "POST",
+            url: baseUri,
+            data: customerSubs,
+            cache: false,
+            success: function (result) {
+                $('#isSelectPlanMsg').hide();
+                $('#curPanDetails').hide();
+                $('#planDetails').html(result);
+                $('#planDetails').show();
+            },
+            error: function (error1) {
+                //alert(error1);
+            }
+        });
+    }
+    else {
+        $('#isSelectPlanMsg').show();
+        $('#planDetails').hide();
+        $('#isSelectPlanMsg').html('<div class="errorTermsConditionsMsg"><h3>Please select a plan.</h3></div>');
+    }
+}
+
+//view
+(onchange)/onchange="ShowPlanDetails('<%= Url.Action("ShowPlanDetails", "SwitchPlan") %>', 
+'<%=Model.CustomerSubscription.CustomerSubscriptionID %>')" onkeyup="this.blur();this.focus();">
+
+
+
+// controller
+[AcceptVerbs(HttpVerbs.Post)]
+        public ActionResult ShowPlanDetails(ViewModel.CustomerSubscription data) or(subscriptionid,planid etc)
